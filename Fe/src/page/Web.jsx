@@ -86,7 +86,7 @@ const Web = () => {
     // get NameList
     const getItemList = async (idList) => {
         const { data } = await One_Categories(idList);
-        setNameList(data?.data?.nameList)
+        setNameList(data?.nameList)
     }
     return (
         <div className="w-[1450px] relative mx-auto bg-gray-2x00">
