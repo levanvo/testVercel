@@ -21,7 +21,7 @@ const Posts = () => {
   useEffect(() => {
     const fetchAPI_P = async () => {
       const { data } = await All_Posts();
-      dispatch({ type: "API_Category", payload: data.data });
+      dispatch({ type: "API_Category", payload: data });
     };
     fetchAPI_P();
     // áp dụng useState lấy data từ thẻ Select

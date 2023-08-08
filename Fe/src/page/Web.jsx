@@ -24,7 +24,7 @@ const Web = () => {
     useEffect(() => {
         const fetch = async () => {
             const { data } = await All_Categories();
-            dispatch({ type: "API_Category", payload: data.data });
+            dispatch({ type: "API_Category", payload: data });
         }
         fetch();
     }, []);
@@ -35,7 +35,7 @@ const Web = () => {
         if (getLoading == true) {
             const fetch = async () => {
                 const { data } = await All_Posts();
-                dispatch({ type: "API_Post", payload: data.data });
+                dispatch({ type: "API_Post", payload: data });
             }
             fetch();
         }
@@ -43,7 +43,7 @@ const Web = () => {
     // handle choose list
     const All_List = async () => {
         const { data } = await All_Posts();
-        dispatch({ type: "API_Post", payload: data.data });
+        dispatch({ type: "API_Post", payload: data });
         setName_CT("full list for today !");
         setName_Empty("");
     }
@@ -51,8 +51,8 @@ const Web = () => {
         setName_CT(item.nameList);
         let arrayTemporary1 = [];
         const { data } = await All_Posts();
-        dispatch({ type: "API_Post", payload: data.data });
-        data.data?.map((items) => {
+        dispatch({ type: "API_Post", payload: data });
+        data?.map((items) => {
             if (items.categoryID == item._id) {
                 arrayTemporary1.push(items);
             }

@@ -16,14 +16,14 @@ const List = () => {
   useEffect(() => {
     const fetchAPI_CT = async () => {
       const { data } = await All_Categories();
-      dispatch({ type: "API_Category", payload: data.data });
+      dispatch({ type: "API_Category", payload: data });
     };
     fetchAPI_CT();
   }, []);
   // handle others
   const getIdList = async (idList) => {
     const { data } = await One_Categories(idList);
-    setDataUpdate(data.data);
+    setDataUpdate(data);
   }
   const SetLoadNewListUpdate = () => {
     return <DashBoard />
