@@ -13,8 +13,8 @@ export const One_Categories = async (id) => {
 export const Create_Categories = async (data) => {
     return await instance.post(`/categories`, data);
 };
-export const Update_Categories = async (data, _id) => {
-    return await instance.put(`/categories/${_id}`, data);
+export const Update_Categories = async (data) => {
+    return await instance.put(`/categories/${data.id}`, data);
 };
 export const Remove_Categories = async (id) => {
     return await instance.delete(`/categories/${id}`);

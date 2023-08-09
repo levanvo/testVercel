@@ -13,10 +13,10 @@ const redux_posts = (state = Initial, action) => {
                 draff.dataPosts.push(action.payload);
                 return;
             case "update_Post":
-                draff.dataPosts = draff.dataPosts.map((items) => items._id == action.payload._id ? action.payload : items);
+                draff.dataPosts = draff.dataPosts.map((items) => items.id == action.payload.id ? action.payload : items);
                 return;
             case "remove_Post":
-                draff.dataPosts = draff.dataPosts.filter((items) => items._id != action.payload);
+                draff.dataPosts = draff.dataPosts.filter((items) => items.id != action.payload);
                 return;
             default:
                 return state;

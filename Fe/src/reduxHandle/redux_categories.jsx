@@ -14,10 +14,10 @@ const redux_categories = (state = Initial, action) => {
                 draff.dataCategories.push(action.payload);
                 return;
             case "update_Category":
-                draff.dataCategories = draff.dataCategories.map((items) => items._id == action.payload._id ? action.payload : items);
+                draff.dataCategories = draff.dataCategories.map((items) => items.id == action.payload.id ? action.payload : items);
                 return;
             case "remove_Category":
-                draff.dataCategories = draff.dataCategories.filter((items) => items._id != action.payload);
+                draff.dataCategories = draff.dataCategories.filter((items) => items.id != action.payload);
                 return;
             default:
                 return state;

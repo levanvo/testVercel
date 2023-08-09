@@ -9,7 +9,7 @@ const List = () => {
   const [formAdd] = Form.useForm();
   const [formUpdate] = Form.useForm();
   const dispatch = useDispatch();
-  const [idTemps, setTemps] = useState("");
+  // const [idTemps, setTemps] = useState();
   const { dataCategories } = useSelector((item) => item.dataCategory);
   const [getDataUpdate, setDataUpdate] = useState({})
 
@@ -23,19 +23,20 @@ const List = () => {
   // handle others
   const getIdList = async (idList) => {
     const { data } = await One_Categories(idList);
-    setDataUpdate(data);
+    setDataUpdate({ data });
   }
-  const SetLoadNewListUpdate = () => {
-    return <DashBoard />
-  }
+  // const SetLoadNewListUpdate = () => {
+  //   return <DashBoard />
+  // }
   // CRUD list
   const AddList = async (data) => {
-    dispatch({ type: "add_Category", payload: data });
+    console.log(data);
+    dispatch({ type: "add_Category", payload: { ...data, arrayPosts: [] } });
     const info = () => {
       message.success('Added list: ' + data.nameList);
     };
     info();
-    await Create_Categories(data);
+    await Create_Categories({ ...data, arrayPosts: [] });
     formAdd.resetFields();
     setTimeout(() => {
       window.location.reload();
@@ -44,72 +45,78 @@ const List = () => {
   const RemoveList = async (data) => {
     const wordering = window.confirm("Are you sure ?");
     if (wordering) {
-      if (data.arrayPosts.length > 0) {
+      if (data.arrayPosts?.length > 0) {
         const decide = window.confirm("The category has associated products, still delete ?");
         if (decide) {
           data.arrayPosts?.map((item) => {
             Remove_Posts(item);
             dispatch({ type: "remove_Post", payload: item });
           });
-          Remove_Categories(data._id);
-          dispatch({ type: "remove_Category", payload: data._id });
+          Remove_Categories(data.id);
+          dispatch({ type: "remove_Category", payload: data.id });
           const info = () => {
             message.success('Deleted list + something products has linked this list !');
           };
           info();
         };
       } else {
-        Remove_Categories(data._id);
-        dispatch({ type: "remove_Category", payload: data._id });
+        Remove_Categories(data.id);
+        dispatch({ type: "remove_Category", payload: data.id });
         message.success('Deleted list !');
       };
     };
   };
-  const UpdateList = async (data) => {
-    await Update_Categories(data, idTemps);
-    dispatch({ type: "update_Category", payload: { ...data, idTemps } });
+  const UpdateList = async (data1) => {
+    const data2 = {
+      id: getDataUpdate.data.id,
+      nameList: data1.nameList,
+      arrayPosts: getDataUpdate.data.arrayPosts
+    };
+    await Update_Categories(data2);
+    dispatch({ type: "update_Category", payload: data2 });
     const info = () => {
-      message.success('Updateted: ' + data.nameList);
+      message.success('Updateted: ' + data2.nameList);
     };
     info();
     formUpdate.resetFields();
-    setTemps("");
+    // setTemps("");
     setTimeout(() => {
       window.location.reload();
     }, 1500);
-  }
+  };
   const columns = [
     {
       title: <p className='text-center '>#</p>,
       dataIndex: 'Uid',
       key: 'Uid',
-      render: (text, key) => (<p className='text-center' key={key._id}>{text + 1}</p>),
+      render: (text, key) => (<p className='text-center' key={key.id}>{text + 1}</p>),
     },
     {
       title: <p className='text-center '>Name</p>,
       dataIndex: 'nameList',
       key: 'nameList',
-      render: (text, key) => (<p className='text-center' key={key._id}>{text}</p>),
+      render: (text, key) => (<p className='text-center' key={key.id}>{text}</p>),
     },
     {
       title: <p className='text-center '>Linked-Products</p>,
       key: "Linked-Products",
       render: (text, key) => {
-        return <p className='text-center' key={key._id}>{key.arrayPosts?.length}</p>
+        return <p className='text-center' key={key.id}>{key.arrayPosts?.length}</p>
       },
     },
     {
       title: <p className='text-center '>Handle</p>,
       key: 'action',
       render: (data, record) => (
+        // console.log(data),
         <div className='flex justify-center space-x-2'>
           <button onClick={() => RemoveList(data)} className='bg-red-500 p-1 rounded-md text-white font-bold hover:scale-110'>Remove</button>
-          <input type="checkbox" id={data._id} className='formUpdateCT' hidden />
-          <label htmlFor={data._id}><p onClick={() => getIdList(data._id)} className='bg-green-500 p-1 rounded-md text-white font-bold hover:scale-110 cursor-pointer'>Update</p></label>
+          <input type="checkbox" id={data.id} className='formUpdateCT' hidden />
+          <label htmlFor={data.id}><p onClick={() => getIdList(data.id)} className='bg-green-500 p-1 rounded-md text-white font-bold hover:scale-110 cursor-pointer'>Update</p></label>
           <div className="formCT rounded-md duration-200">
             <h2 className='text-center dfont-bold text-xl mb-7 mt-2'>Update-list: <span className='text-orange-500'>"{data.nameList}"</span></h2>
             <Form
-              initialValues={getDataUpdate}
+              // initialValues={getDataUpdate}
               name="basic"
               form={formUpdate}
               labelCol={{ span: 6 }}
@@ -126,14 +133,14 @@ const List = () => {
               </Form.Item>
 
               <Form.Item wrapperCol={{ offset: 9, span: 16 }}>
-                <button onClick={() => setTemps(data._id)} className='bg-sky-600 text-white hover:bg-sky-500 px-7 mt-5 py-1 rounded-md'>
+                <button className='bg-sky-600 text-white hover:bg-sky-500 px-7 mt-5 py-1 rounded-md'>
                   Update
                 </button>
               </Form.Item>
             </Form>
             {/* :""} */}
           </div>
-          <label htmlFor={data._id} className='display2' onClick={() => SetLoadNewListUpdate()}></label>
+          <label htmlFor={data.id} className='display2'></label>
         </div>
       ),
     },
@@ -141,7 +148,7 @@ const List = () => {
 
   const data = dataCategories?.map((item, index) => {
     return {
-      key: item._id,
+      key: item.id,
       Uid: index,
       ...item,
     }

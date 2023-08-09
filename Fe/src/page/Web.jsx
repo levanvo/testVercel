@@ -53,7 +53,7 @@ const Web = () => {
         const { data } = await All_Posts();
         dispatch({ type: "API_Post", payload: data });
         data?.map((items) => {
-            if (items.categoryID == item._id) {
+            if (items.categoryID == item.id) {
                 arrayTemporary1.push(items);
             }
         });
@@ -126,7 +126,7 @@ const Web = () => {
                     <div className="ScrollWeb h-[568px]">
                         <p onClick={() => All_List()} className=' mt-5 w-[16vw] rounded-lg py-1 duration-75 mx-auto bg-orange-400 text-white text-center active:scale-110 cursor-pointer text-2'>all-posts</p>
                         {dataCategories?.map((items) => (
-                            <p onClick={() => Choose_List(items)} key={items._id} className='m-2 py-1 w-[16vw] rounded-lg duration-75 mx-auto bg-orange-400 text-white text-center active:scale-110 cursor-pointer text-2'>{items.nameList}</p>
+                            <p onClick={() => Choose_List(items)} key={items.id} className='m-2 py-1 w-[16vw] rounded-lg duration-75 mx-auto bg-orange-400 text-white text-center active:scale-110 cursor-pointer text-2'>{items.nameList}</p>
                         ))}
                     </div>
                 </div>
@@ -145,10 +145,10 @@ const Web = () => {
                             <Spin className='my-auto' size='large' />
                             :
                             dataPosts?.map((items) => (
-                                <div className="w-[270px] h-[350px] m-5 bg-gray-100 rounded-md" key={items._id}>
+                                <div className="w-[270px] h-[350px] m-5 bg-gray-100 rounded-md" key={items.id}>
                                     <div className="overflow-hidden w-[240px] h-[240px] mt-2 mx-auto">
-                                        <input type="checkbox" id={items._id} hidden className='inputdetail' />
-                                        <label htmlFor={items._id}>
+                                        <input type="checkbox" id={items.id} hidden className='inputdetail' />
+                                        <label htmlFor={items.id}>
                                             <img onClick={() => getItemList(items.categoryID)} className='w-[240px] h-[240px] hover:scale-125 duration-1000 cursor-pointer rounded-md mx-auto' src={items.image} alt="" />
                                         </label>
                                         <div className="detailPost duration-100 rounded-md">
@@ -181,7 +181,7 @@ const Web = () => {
                                             </div>
 
                                         </div>
-                                        <label htmlFor={items._id} className='inputdetail displayDetails'></label>
+                                        <label htmlFor={items.id} className='inputdetail displayDetails'></label>
                                     </div>
                                     <h4 className='text-gray-500 ml-2 font-medium'>{items.title_post}</h4>
                                     <p className='text-xs ml-3 text-gray-400'>{items.synopsis.length > 140 ? items.synopsis.slice(0, 140) : items.synopsis} </p>

@@ -27,7 +27,7 @@ const Posts = () => {
     // áp dụng useState lấy data từ thẻ Select
     const showCategories = dataCategories.map((item) => ({
       label: item.nameList,
-      value: item._id,
+      value: item.id,
     }))
     setOptions(showCategories);
   }, []);
@@ -113,10 +113,10 @@ const Posts = () => {
     setId(idPost);
   };
   const handleChangeSelect = (value) => {
-    setSelect1(value);//cập nhật _id của list đã chọn
+    setSelect1(value);//cập nhật id của list đã chọn
   };
   const handleChangeSelectUpdate = (value) => {
-    setSelect2(value);//cập nhật _id của list đã chọn
+    setSelect2(value);//cập nhật id của list đã chọn
   };
   // CRUD cho page Posts
   const RemovePost = async (id) => {
@@ -250,9 +250,9 @@ const Posts = () => {
       key: 'action',
       render: (data, record) => (
         <div className='flex justify-center space-x-2'>
-          <button onClick={() => RemovePost(data?._id)} className='bg-red-500 py-1 px-2 rounded-md text-white font-bold hover:scale-110'>Remove</button>
-          <input type="checkbox" id={data._id} className='inputPost' hidden />
-          <label htmlFor={data._id} onClick={() => SetIdPost(data?._id)} className='cursor-pointer bg-green-500 py-1 px-2 rounded-md text-white font-bold hover:scale-110'>Update</label>
+          <button onClick={() => RemovePost(data?.id)} className='bg-red-500 py-1 px-2 rounded-md text-white font-bold hover:scale-110'>Remove</button>
+          <input type="checkbox" id={data.id} className='inputPost' hidden />
+          <label htmlFor={data.id} onClick={() => SetIdPost(data?.id)} className='cursor-pointer bg-green-500 py-1 px-2 rounded-md text-white font-bold hover:scale-110'>Update</label>
           <div className="formUpdatePost rounded-lg duration-200">
             <h2 className='text-center xfont-bold text-xl'>Update Post: <span className='text-orange-500'>{data.title_post}</span></h2>
             <Form
@@ -362,7 +362,7 @@ const Posts = () => {
               </Form.Item>
             </Form>
           </div>
-          <label htmlFor={data._id} className='displayUpdatePost'></label>
+          <label htmlFor={data.id} className='displayUpdatePost'></label>
         </div>
       ),
     },
@@ -370,7 +370,7 @@ const Posts = () => {
 
   const dataPost = dataPosts?.map((item, index) => {
     return {
-      key: item._id,
+      key: item.id,
       Uid: index,
       ...item
     };
