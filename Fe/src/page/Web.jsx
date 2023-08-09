@@ -19,7 +19,6 @@ const Web = () => {
     const [Router, setRouter] = useState("dashBoard");//router
     const [getLoading, setLoading] = useState  (true);
     const [getNameList, setNameList] = useState("");
-    const contentExampe = "Tùy theo từng loại và chủ đề của poster mà bạn có thể lựa chọn phần mềm thiết kế phù hợp. Với một số phần mềm thiết kế poster chuyên nghiệp, chuyên dụng có thể kể đến như: Adobe Photoshop, Adobe InDesign hay các trang web thiết kế poster như Canva. Bên cạnh đó, nếu sử dụng không quen các phần mềm của Adobe, bạn có thể thử dùng Microsoft Word, Microsoft PowerPoint hay Microsoft Publisher để thiết kế poster đơn giản hơn. Tuy nhiên, với các phần mềm chuyên về thiết kế đồ họa sẽ có nhiều ưu điểm và xử lý hình ảnh chuyên nghiệp hơn, cho bạn thỏa sức sáng tạo trong các thiết kế của mình.Ứng dụng các nguyên lý thị giác Để thiết kế một poster ấn tượng, thu hút bạn cần biết cách ứng dụng các nguyên lý thị giác. Nếu bạn muốn người xem chú ý vào khu vực nào của poster, hãy thiết kế tập trung vào đó. Việc lựa chọn một yếu tố quan trọng (màu sắc, hình ảnh, nội dung,...) để ứng dụng nguyên lý thị giác sẽ mang lại hiệu quả tốt hơn là tập trung hết vào các yếu tố.";
     // data categories and posts
     useEffect(() => {
         const fetch = async () => {
@@ -171,7 +170,7 @@ const Web = () => {
                                             </div>
                                             <div className="content px-2 border shadow-inner shadow-gray-100 w-[680px] mx-auto h-[220px] ScrollWeb">
                                                 {/* contentExample */}
-                                                <p className='font-bold'>Content: <span className='text-gray-500 font-normal'>{items.content}*{contentExampe}</span></p>
+                                                <p className='font-bold'>Content: <span className='text-gray-500 font-normal'>{items.content}</span></p>
                                                 <p className='font-bold'>Conclusion: <span className='text-gray-500 font-normal'>{items.conclusion}</span></p>
                                             </div>
                                             <div className="flex justify-between text-xs mt-2">
