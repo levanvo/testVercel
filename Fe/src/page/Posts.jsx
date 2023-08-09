@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { All_Posts, Create_Posts, Remove_Posts, Update_Posts } from '../api/api_posts';
-import { Table, Image, Form, Input, Select, message } from 'antd';
+import { Table, Image, Form, Input, Select, message, Spin } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import axios from "axios";
+import { LoadingOutlined } from '@ant-design/icons';
 
 const Posts = () => {
   const [formAdd] = Form.useForm();
@@ -11,13 +12,20 @@ const Posts = () => {
   const dispatch = useDispatch();
   const { dataPosts } = useSelector((item) => item.dataPost);
   const { dataCategories } = useSelector((item) => item.dataCategory);
-  const [useImage1, setImage1] = useState('');
-  const [useSelect1, setSelect1] = useState('');
-  const [useImage2, setImage2] = useState('https://picsum.photos/300');//khu vuc khong lay dc img tu hang 2 tro di khi update !
+  const [useImage1, setImage1] = useState('');//add image
+  const [useSelect1, setSelect1] = useState('');//add select
   const [useSelect2, setSelect2] = useState('');
   const [useId, setId] = useState("");
   const [useOptions, setOptions] = useState([]);
 
+  const antIcon = (
+    <LoadingOutlined
+      style={{
+        fontSize: 24,
+      }}
+      spin
+    />
+  );
   useEffect(() => {
     const fetchAPI_P = async () => {
       const { data } = await All_Posts();
@@ -31,7 +39,6 @@ const Posts = () => {
     }))
     setOptions(showCategories);
   }, []);
-
   // khu upload image choosed và selected
   const handleImage = async () => {
     const getImage = document.querySelector("#uploadImage");
@@ -56,32 +63,7 @@ const Posts = () => {
       },
     });
     setImage1(get_image.data.secure_url);
-  };
-  const handleImageUpdate = async () => {//khu vuc khong lay dc img tu hang 2 tro di khi update !
-    const getImage = document.querySelector("#uploadImageUpdate");
-    const localImage = document.getElementById("placeReceiveImageUpdate");
-    const Image = getImage.files[0];
-    console.log(getImage);
-
-    if (getImage.value) {
-      localImage.src = URL.createObjectURL(Image);
-    }
-    // console.log(Image);
-    const cloudName = "darnprw0q";
-    const presetName = "vole_2k";
-    const folderName = "assigment_TypeScript";
-    const api = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
-    const upImage = new FormData();
-
-    upImage.append("upload_preset", presetName);
-    upImage.append("folder", folderName);
-    upImage.append("file", Image);
-    const get_image = await axios.post(api, upImage, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    setImage2(get_image.data.secure_url);
+    // console.log(getImage.files);
   };
   const ResetImage = () => {
     const getImage = document.querySelector("#uploadImage");
@@ -96,19 +78,7 @@ const Posts = () => {
     }
     getImage.value = "";
   };
-  const ResetImageUpdate = () => {//khu vuc khong lay dc img tu hang 2 tro di khi update !
-    const getImage = document.querySelector("#uploadImageUpdate");
-    const localImage = document.getElementById("placeReceiveImageUpdate");
-    localImage.src = "";//làm trống ảnh xem trước
-    setImage2("");// làm trống ảnh tải về
-    if (getImage.value) {
-      const info = () => {
-        message.success('Remove the image .');
-      };
-      info();
-    }
-    getImage.value = "";
-  };
+  
   const SetIdPost = (idPost) => {
     setId(idPost);
   };
@@ -134,7 +104,8 @@ const Posts = () => {
     const datta = {
       title_post: data.title_post,
       content: data.content,
-      image: useImage2,//li do
+      // image: useImage1,//li do
+      image:"https://picsum.photos/300",
       link: data.link,
       categoryID: useSelect2,
       conclusion: data.conclusion,
@@ -151,7 +122,6 @@ const Posts = () => {
       message.success('Updated a post: ' + data.title_post);
     };
     info();
-    ResetImageUpdate();
     setTimeout(() => {
       window.location.reload();
     }, 1500);
@@ -172,7 +142,7 @@ const Posts = () => {
     dispatch({ type: "add_Post", payload: datta });
     formAdd.resetFields();
     const info = () => {
-      message.success('Added a post: ' + data.title_post);
+      message.success('Added a post: ' + datta.title_post);
     };
     info();
     ResetImage();
@@ -329,12 +299,12 @@ const Posts = () => {
                     <div className="mb-5 formUpImage">
                       <div className="flex justify-center space-x-5 mb-2">
                         {/* <p><span className='text-red-500'>*</span> Image:</p> */}
-                        <p className='bg-red-500 text-white rounded-xl leading-5 w-20 text-center cursor-pointer active:scale-90' onClick={() => ResetImageUpdate()}>reset</p>
+                        <p className='bg-red-500 text-white rounded-xl leading-5 w-20 text-center cursor-pointer active:scale-90' onClick={() => ResetImage()}>reset</p>
                       </div>
 
                       <div className="inputImage flex justify-center space-x-2">
-                        <input type="file" id='uploadImageUpdate' onChange={handleImageUpdate} className='rounded-md w-36 cursor-pointer' />
-                        <img className='rounded-md border w-40 h-28 cursor-no-drop' src="" alt="" id='placeReceiveImageUpdate' />
+                        <input type="file" id='uploadImage' onChange={handleImage} className='rounded-md w-36 cursor-pointer' />
+                        <img className='rounded-md border w-40 h-28 cursor-no-drop' src="" alt="" id='placeReceiveImage' />
                       </div>
                     </div>
                   </Form.Item>
@@ -356,9 +326,12 @@ const Posts = () => {
               </div>
               {/* button */}
               <Form.Item wrapperCol={{ offset: 9, span: 16 }}>
-                <button className='bg-sky-600 text-white hover:bg-sky-500 px-7 mt-5 py-1 rounded-md'>
-                  Update post
-                </button>
+                {/* {useImage1 ? */}
+                  <button className='bg-sky-600 text-white hover:bg-sky-500 px-7 ml-7 mt-5 py-1 rounded-md'>
+                    Update post
+                  </button>
+                  {/* :
+                  <span className='text-orange-500 bg-gray-100 px-2 py-2 rounded-md'><Spin indicator={antIcon} /> chosse image (..loading)</span>} */}
               </Form.Item>
             </Form>
           </div>
@@ -382,7 +355,7 @@ const Posts = () => {
       <input type="checkbox" id='addPost' hidden />
       <div className="flex justify-end  text-green-600 hover:text-orange-500"><label htmlFor="addPost"><p className=' cursor-pointer'>Add-new</p></label></div>
       <div className="formAddPost rounded-md duration-200">
-        <h2 className='text-center xfont-bold text-xl'>Add-new Post</h2>
+        <h2 className='text-center text-sky-500 underline font-bold mb-10 text-xl'>Add-new Post</h2>
         <Form
           name="basic"
           form={formAdd}
@@ -456,7 +429,6 @@ const Posts = () => {
               >
                 <div className="mb-5 formUpImage">
                   <div className="flex justify-center space-x-5 mb-2">
-                    {/* <p><span className='text-red-500'>*</span> Image:</p> */}
                     <p className='bg-red-500 text-white rounded-xl leading-5 w-20 text-center cursor-pointer active:scale-90' onClick={() => ResetImage()}>reset</p>
                   </div>
 
@@ -484,9 +456,12 @@ const Posts = () => {
           </div>
           {/* button */}
           <Form.Item wrapperCol={{ offset: 9, span: 16 }}>
-            <button className='bg-sky-600 text-white hover:bg-sky-500 px-7 mt-5 py-1 rounded-md'>
-              Add post
-            </button>
+            {useImage1 ?
+              <button className='bg-sky-600 text-white hover:bg-sky-500 px-7 ml-10 mt-5 py-1 rounded-md'>
+                Add post
+              </button>
+              :
+              <span className='text-orange-500 bg-gray-100 px-2 py-2 rounded-md'><Spin indicator={antIcon} /> chosse image (..loading)</span>}
           </Form.Item>
         </Form>
       </div>
